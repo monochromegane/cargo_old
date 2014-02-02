@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/monochromegane/cargo/command"
-	"github.com/monochromegane/cargo/option"
+	"github.com/monochromegane/cargo/cargo"
+	"github.com/monochromegane/cargo/cargo/option"
 	"os"
 )
 
@@ -14,22 +14,16 @@ func main() {
 
 	parser := flags.NewParser(&opts, flags.Default)
 	parser.Name = "cargo"
-	parser.Usage = "[OPTIONS] COMMAND [ARG...]"
+	parser.Usage = "[OPTIONS]"
 
-	args, err := parser.Parse()
-	if err != nil || len(args) == 0 {
+	_, err := parser.Parse()
+	if err != nil {
 		parser.WriteHelp(os.Stdout)
 		os.Exit(1)
 	}
 	fmt.Printf("It works!\n")
 
-	in := make(chan *command.Result)
-
-	command := command.Command{"docker", append([]string{"run", opts.Image}, args...)}
-	go command.Exec(in)
-
-	for result := range in {
-		fmt.Printf("%s, %s\n", result.Output, result.Err)
-	}
+	cargo := cargo.Cargo{Option: opts}
+	cargo.Run()
 
 }
