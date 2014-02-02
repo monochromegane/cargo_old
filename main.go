@@ -14,9 +14,10 @@ func main() {
 
 	parser := flags.NewParser(&opts, flags.Default)
 	parser.Name = "cargo"
+	parser.Usage = "[OPTIONS] COMMAND [ARG...]"
 
-	_, err := parser.Parse()
-	if err != nil {
+	args, err := parser.Parse()
+	if err != nil || len(args) == 0 {
 		parser.WriteHelp(os.Stdout)
 		os.Exit(1)
 	}
@@ -24,7 +25,7 @@ func main() {
 
 	in := make(chan *command.Result)
 
-	command := command.Command{"docker", []string{"run", opts.Image, opts.Command}}
+	command := command.Command{"docker", append([]string{"run", opts.Image}, args...)}
 	go command.Exec(in)
 
 	for result := range in {
