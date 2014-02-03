@@ -8,4 +8,5 @@ type Option struct {
 	Dest        string `short:"d"`
 	Command     string `short:"c"`
 	WorkDir     string `short:"w" default:"~/cargo"`
+        GoPackage   string `long:"go-package"`
 }

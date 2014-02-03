@@ -3,6 +3,7 @@ package cargo
 import (
 	"fmt"
 	"github.com/monochromegane/cargo/cargo/asset"
+	"github.com/monochromegane/cargo/cargo/group"
 	"github.com/monochromegane/cargo/cargo/option"
 )
 
@@ -16,4 +17,7 @@ func (self *Cargo) Run() {
         err := asset.Prepare()
         fmt.Printf("%s\n", err)
 
+        group := group.Group{From: asset.CurrentDir(), Option: self.Option}
+        g := group.GroupBy()
+        fmt.Printf("%s\n", g)
 }
