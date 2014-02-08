@@ -4,10 +4,6 @@ import (
         "fmt"
 )
 
-type Group interface {
-	GroupBy([]string) map[int][]string
-}
-
 type Commander interface {
 	Output() ([]byte, error)
 }

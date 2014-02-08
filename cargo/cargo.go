@@ -21,8 +21,7 @@ func (self *Cargo) Run() {
 	err := asset.Prepare()
 	fmt.Printf("%s\n", err)
 
-	group := group.Group{From: asset.CurrentDir(), Option: self.Option}
-	groups := group.GroupBy()
+        groups := group.GroupBy(asset.CurrentDir(), self.Option).GroupBy()
 	fmt.Printf("%s\n", groups)
 
 	var opt = self.Option
