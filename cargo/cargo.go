@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/monochromegane/cargo/cargo/asset"
 	"github.com/monochromegane/cargo/cargo/concurrency"
+	"github.com/monochromegane/cargo/cargo/docker"
 	"github.com/monochromegane/cargo/cargo/group"
 	"github.com/monochromegane/cargo/cargo/option"
-	"os/exec"
 	"strings"
 )
 
@@ -28,15 +28,14 @@ func (self *Cargo) Run() {
 	var opt = self.Option
 	concurrent := concurrency.Concurrency{}
 	concurrent.Run(groups, func(index int, group []string) concurrency.Command {
-		args := []string{
-			"run",
-			"-v",
-			asset.WorkDirWithIndex(index) + ":" + opt.Dest,
+		return docker.RunCommand(
 			opt.Image,
-		}
-		args = append(args, strings.Split(opt.Command, " ")...)
-		args = append(args, group...)
-		return exec.Command("docker", args...)
+			docker.RunOption{
+				SrcVolume: asset.WorkDirWithIndex(index),
+				DstVolume: opt.Dest,
+			},
+			append(strings.Split(opt.Command, " "), group...),
+		)
 	})
 
 }
