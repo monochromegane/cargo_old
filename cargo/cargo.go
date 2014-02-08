@@ -27,7 +27,7 @@ func (self *Cargo) Run() {
 
 	var opt = self.Option
 	concurrent := concurrency.Concurrency{}
-	concurrent.Run(groups, func(index int, group []string) concurrency.Command {
+	concurrent.Run(groups, func(index int, group []string) concurrency.Commander {
 		return docker.RunCommand(
 			opt.Image,
 			docker.RunOption{

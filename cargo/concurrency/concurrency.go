@@ -8,14 +8,14 @@ type Group interface {
 	GroupBy([]string) map[int][]string
 }
 
-type Command interface {
+type Commander interface {
 	Output() ([]byte, error)
 }
 
 type Concurrency struct {
 }
 
-type CommandBuilder func(index int, args []string) Command
+type CommandBuilder func(index int, args []string) Commander
 
 func (self *Concurrency) Run(group map[int][]string, builder CommandBuilder) {
         results := make(chan []byte)
