@@ -2,7 +2,6 @@ package docker
 
 import (
 	"os/exec"
-        "fmt"
 )
 
 type RunOption struct {
@@ -21,7 +20,6 @@ func RunCommand(image string, opt RunOption, commmands []string) *exec.Cmd {
 	}
 	args = append(args, image)
 	args = append(args, commmands...)
-        fmt.Printf("%s\n", args)
 
 	return exec.Command("docker", args...)
 }

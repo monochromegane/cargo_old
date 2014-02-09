@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/monochromegane/cargo/cargo"
 	"github.com/monochromegane/cargo/cargo/option"
@@ -21,7 +20,6 @@ func main() {
 		parser.WriteHelp(os.Stdout)
 		os.Exit(1)
 	}
-	fmt.Printf("It works!\n")
 
 	cargo := cargo.Cargo{Option: opts}
 	cargo.Run()

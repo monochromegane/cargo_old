@@ -1,7 +1,6 @@
 package asset
 
 import (
-	"fmt"
 	"github.com/monochromegane/cargo/cargo/option"
 	"os"
 	"os/exec"
@@ -17,17 +16,14 @@ type Asset struct {
 
 func (self *Asset) Prepare() error {
 	self.timestamp = string(time.Now().Format("20060102150405"))
-	fmt.Printf("timestamp: %s\n", self.timestamp)
 
 	if _, err := os.Stat(self.CurrentDir()); err != nil {
 		return err
 	}
 
-
 	// TODO it should execute with go routine.
-        os.Mkdir(self.WorkDir(), 0775)
+	os.Mkdir(self.WorkDir(), 0775)
 	for i := 0; i < self.Option.Concurrency; i++ {
-		fmt.Printf("%s -> %s\n", self.CurrentDir(), self.WorkDirWithIndex(i))
 		command := exec.Command("cp", "-r", self.CurrentDir(), self.WorkDirWithIndex(i))
 		err := command.Run()
 		if err != nil {

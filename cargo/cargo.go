@@ -1,7 +1,6 @@
 package cargo
 
 import (
-	"fmt"
 	"github.com/monochromegane/cargo/cargo/asset"
 	"github.com/monochromegane/cargo/cargo/concurrency"
 	"github.com/monochromegane/cargo/cargo/docker"
@@ -16,23 +15,22 @@ type Cargo struct {
 
 func (self *Cargo) Run() {
 
-	fmt.Println("Cargo Run!!")
 	asset := asset.Asset{Option: self.Option}
 	err := asset.Prepare()
-	fmt.Printf("%s\n", err)
+	if err != nil {
+		return
+	}
 
-        groups := group.GroupBy(asset.CurrentDir(), self.Option).GroupBy()
-	fmt.Printf("%s\n", groups)
+	groups := group.NewGrouper(asset.CurrentDir(), self.Option).GroupBy()
 
-	var opt = self.Option
 	concurrency.Run(groups, func(index int, group []string) concurrency.Commander {
 		return docker.RunCommand(
-			opt.Image,
+			self.Option.Image,
 			docker.RunOption{
 				SrcVolume: asset.WorkDirWithIndex(index),
-				DstVolume: opt.Dest,
+				DstVolume: self.Option.Dest,
 			},
-			append(strings.Split(opt.Command, " "), group...),
+			append(strings.Split(self.Option.Command, " "), group...),
 		)
 	})
 
