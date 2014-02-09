@@ -9,9 +9,12 @@ type Grouper interface {
 }
 
 func NewGrouper(from string, option option.Option) Grouper {
-	if option.Group == "go-package" {
-                return NewGoPackage(from, option)
+	switch option.Group {
+	case "file-size":
+		return NewFileSize(from, option)
+	case "go-package":
+		return NewGoPackage(from, option)
+	default:
+		return nil
 	}
-	return nil
 }
-
