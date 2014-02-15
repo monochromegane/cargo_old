@@ -1,7 +1,7 @@
 package group
 
 import (
-	"github.com/monochromegane/cargo/cargo/docker"
+	"github.com/monochromegane/cargo/cargo/command"
 	"github.com/monochromegane/cargo/cargo/option"
 	"strings"
 )
@@ -20,15 +20,14 @@ func NewGoPackage(from string, option option.Option) *GoPackage {
 
 func (self *GoPackage) GroupBy() map[int][]string {
 	opt := self.Option
-	command := docker.RunCommand(
-		opt.Image,
-		docker.RunOption{
-			SrcVolume: self.From,
-			DstVolume: opt.Dest,
-		},
-		[]string{"/go/go/bin/go", "list", opt.GoPackage + "/..."},
-	)
-	result, err := command.Output()
+
+	command := command.DockerRunCommand{
+		Image:     opt.Image,
+		SrcVolume: self.From,
+		DstVolume: opt.Dest,
+		Cmd:       []string{"/go/go/bin/go", "list", opt.GoPackage + "/..."},
+	}
+	result, err := command.Command().Output()
 	if err != nil {
 		return make(map[int][]string)
 	}
