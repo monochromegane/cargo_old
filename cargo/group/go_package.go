@@ -21,11 +21,12 @@ func NewGoPackage(from string, option option.Option) *GoPackage {
 func (self *GoPackage) GroupBy() map[int][]string {
 	opt := self.Option
 
+	goList := command.GoListCommand{opt.GoPackage}
 	command := command.DockerRunCommand{
 		Image:     opt.Image,
 		SrcVolume: self.From,
 		DstVolume: opt.Dest,
-		Cmd:       []string{"/go/go/bin/go", "list", opt.GoPackage + "/..."},
+		Cmd:       goList.Command().Args,
 	}
 	result, err := command.Command().Output()
 	if err != nil {
