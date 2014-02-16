@@ -25,7 +25,7 @@ func (self *GoPackage) GroupBy() map[int][]string {
 	command := command.DockerRunCommand{
 		Image:     opt.Image,
 		SrcVolume: self.From,
-		DstVolume: opt.Dest,
+		DstVolume: opt.Mount,
 		Cmd:       goList.Command().Args,
 	}
 	result, err := command.Command().Output()

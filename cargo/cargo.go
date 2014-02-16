@@ -27,7 +27,7 @@ func (self *Cargo) Run() {
 		command := command.DockerRunCommand{
 			Image:     self.Option.Image,
 			SrcVolume: asset.WorkDirWithIndex(index),
-			DstVolume: self.Option.Dest,
+			DstVolume: self.Option.Mount,
 			Cmd:       append(strings.Split(self.Option.Command, " "), group...),
 		}
 		return command.Command()

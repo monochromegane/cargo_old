@@ -9,7 +9,7 @@ type Grouper interface {
 }
 
 func NewGrouper(from string, option option.Option) Grouper {
-	switch option.Group {
+	switch option.GroupBy {
 	case "file-size":
 		return NewFileSize(from, option)
 	case "go-package":
