@@ -5,7 +5,7 @@ type Option struct {
 	Concurrency int    `short:"n" default:"1" default-mask:"-" description:"Number of docker run concurrency"`
 	User        string `short:"u" default:"cargo"`
 	GroupBy     string `short:"g" default:"file-size"`
-	Mount       string `short:"d"`
+	Mount       string `short:"m"`
 	Command     string `short:"c"`
 	WorkDir     string `short:"w" default:"/tmp/cargo"`
 	GoPackage   string `long:"go-package"`

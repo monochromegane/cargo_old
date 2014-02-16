@@ -5,19 +5,19 @@ import (
 )
 
 type DockerRunCommand struct {
-	Image     string
-	SrcVolume string
-	DstVolume string
-	Cmd       []string
+	Image           string
+	HostVolume      string
+	ContainerVolume string
+	Cmd             []string
 }
 
 func (self *DockerRunCommand) Command() *exec.Cmd {
 
 	cmd := []string{"run"}
-	if len(self.SrcVolume) > 0 && len(self.DstVolume) > 0 {
+	if len(self.HostVolume) > 0 && len(self.ContainerVolume) > 0 {
 		cmd = append(cmd, []string{
 			"-v",
-			self.SrcVolume + ":" + self.DstVolume}...,
+			self.HostVolume + ":" + self.ContainerVolume}...,
 		)
 	}
 	cmd = append(cmd, self.Image)

@@ -25,10 +25,10 @@ func (self *Cargo) Run() {
 
 	concurrency.Run(groups, func(index int, group []string) concurrency.Commander {
 		command := command.DockerRunCommand{
-			Image:     self.Option.Image,
-			SrcVolume: asset.WorkDirWithIndex(index),
-			DstVolume: self.Option.Mount,
-			Cmd:       append(strings.Split(self.Option.Command, " "), group...),
+			Image:           self.Option.Image,
+			HostVolume:      asset.WorkDirWithIndex(index),
+			ContainerVolume: self.Option.Mount,
+			Cmd:             append(strings.Split(self.Option.Command, " "), group...),
 		}
 		return command.Command()
 	})
