@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -21,15 +22,22 @@ func (self *Asset) Prepare() error {
 		return err
 	}
 
-	// TODO it should execute with go routine.
+	var wg sync.WaitGroup
 	os.Mkdir(self.WorkDir(), 0775)
 	for i := 0; i < self.Option.Concurrency; i++ {
-		command := exec.Command("cp", "-r", self.CurrentDir(), self.WorkDirWithIndex(i))
-		err := command.Run()
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go func(i int, self *Asset) {
+			defer wg.Done()
+			command := exec.Command(
+				"cp",
+				"-r",
+				self.CurrentDir(),
+				self.WorkDirWithIndex(i),
+			)
+			command.Run()
+		}(i, self)
 	}
+	wg.Wait()
 	return nil
 }
 
