@@ -1,28 +1,28 @@
 package concurrency
 
-type Commander interface {
-	Output() ([]byte, error)
-}
+import (
+	"os/exec"
+)
 
 type Result struct {
 	Output []byte
 	Err    error
 }
 
-type CommandBuilder func(index int, args []string) Commander
-type ResultFunc func(index int, args []string, result []byte, err error)
+type RunCommand func(index int, args []string) *exec.Cmd
+type OnResult func(index int, args []string, result []byte, err error)
 
-func Run(group map[int][]string, builder CommandBuilder, result ResultFunc) {
+func Run(group map[int][]string, run RunCommand, onResult OnResult) {
 	results := make(chan Result)
 	for index, args := range group {
-		command := builder(index, args)
-		go func(command Commander, results chan Result) {
+		command := run(index, args)
+		go func(command *exec.Cmd, results chan Result) {
 			result, err := command.Output()
 			results <- Result{result, err}
 		}(command, results)
 	}
 	for i := 0; i < len(group); i++ {
 		r := <-results
-		result(i, group[i], r.Output, r.Err)
+		onResult(i, group[i], r.Output, r.Err)
 	}
 }

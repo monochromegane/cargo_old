@@ -7,6 +7,7 @@ import (
 	"github.com/monochromegane/cargo/cargo/concurrency"
 	"github.com/monochromegane/cargo/cargo/group"
 	"github.com/monochromegane/cargo/cargo/option"
+	"os/exec"
 	"strings"
 )
 
@@ -24,7 +25,7 @@ func (self *Cargo) Run() {
 
 	groups := group.NewGrouper(asset.CurrentDir(), self.Option).GroupBy()
 
-	concurrency.Run(groups, func(index int, group []string) concurrency.Commander {
+	concurrency.Run(groups, func(index int, group []string) *exec.Cmd {
 		command := command.DockerRunCommand{
 			Image:           self.Option.Image,
 			HostVolume:      asset.WorkDirWithIndex(index),
