@@ -5,6 +5,8 @@ import (
 )
 
 type Result struct {
+	Index  int
+	Group  []string
 	Output []byte
 	Err    error
 }
@@ -16,14 +18,14 @@ func Run(group map[int][]string, run RunCommand, onResult OnResult) {
 	results := make(chan Result)
 	for index, args := range group {
 		command := run(index, args)
-		go func(command *exec.Cmd, results chan Result) {
+		go func(index int, args []string, command *exec.Cmd, results chan Result) {
 			result, err := command.Output()
-			results <- Result{result, err}
-		}(command, results)
+			results <- Result{index, args, result, err}
+		}(index, args, command, results)
 	}
 	for i := 0; i < len(group); i++ {
 		r := <-results
-		if !onResult(i, group[i], r.Output, r.Err) {
+		if !onResult(r.Index, r.Group, r.Output, r.Err) {
 			break
 		}
 	}

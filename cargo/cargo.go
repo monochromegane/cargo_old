@@ -7,6 +7,7 @@ import (
 	"github.com/monochromegane/cargo/cargo/concurrency"
 	"github.com/monochromegane/cargo/cargo/group"
 	"github.com/monochromegane/cargo/cargo/option"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -34,6 +35,10 @@ func (self *Cargo) Run() {
 		}
 		return command.Command()
 	}, func(index int, group []string, result []byte, err error) bool {
+		if err != nil {
+			return false
+		}
+		os.RemoveAll(asset.WorkDirWithIndex(index))
 		fmt.Printf("%s", result)
 		return true
 	})
