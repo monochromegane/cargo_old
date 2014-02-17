@@ -1,6 +1,7 @@
 package cargo
 
 import (
+	"fmt"
 	"github.com/monochromegane/cargo/cargo/asset"
 	"github.com/monochromegane/cargo/cargo/command"
 	"github.com/monochromegane/cargo/cargo/concurrency"
@@ -31,6 +32,8 @@ func (self *Cargo) Run() {
 			Cmd:             append(strings.Split(self.Option.Command, " "), group...),
 		}
 		return command.Command()
+	}, func(index int, group []string, result []byte, err error) {
+		fmt.Printf("%s", result)
 	})
 
 }
