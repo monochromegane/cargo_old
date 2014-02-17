@@ -33,8 +33,9 @@ func (self *Cargo) Run() {
 			Cmd:             append(strings.Split(self.Option.Command, " "), group...),
 		}
 		return command.Command()
-	}, func(index int, group []string, result []byte, err error) {
+	}, func(index int, group []string, result []byte, err error) bool {
 		fmt.Printf("%s", result)
+		return true
 	})
 
 }

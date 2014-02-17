@@ -10,7 +10,7 @@ type Result struct {
 }
 
 type RunCommand func(index int, args []string) *exec.Cmd
-type OnResult func(index int, args []string, result []byte, err error)
+type OnResult func(index int, args []string, result []byte, err error) bool
 
 func Run(group map[int][]string, run RunCommand, onResult OnResult) {
 	results := make(chan Result)
@@ -23,6 +23,8 @@ func Run(group map[int][]string, run RunCommand, onResult OnResult) {
 	}
 	for i := 0; i < len(group); i++ {
 		r := <-results
-		onResult(i, group[i], r.Output, r.Err)
+		if !onResult(i, group[i], r.Output, r.Err) {
+			break
+		}
 	}
 }
