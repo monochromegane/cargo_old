@@ -26,6 +26,7 @@ func (self *GoPackage) GroupBy() map[int][]string {
 		Image:           opt.Image,
 		HostVolume:      self.From,
 		ContainerVolume: opt.Mount,
+		WorkDir:         opt.Mount,
 		Cmd:             goList.Command().Args,
 	}
 	result, err := command.Command().Output()

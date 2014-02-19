@@ -31,6 +31,7 @@ func (self *Cargo) Run() {
 			Image:           self.Option.Image,
 			HostVolume:      asset.WorkDirWithIndex(index),
 			ContainerVolume: self.Option.Mount,
+			WorkDir:         self.Option.Mount,
 			Cmd:             append(strings.Split(self.Option.Command, " "), group...),
 		}
 		return command.Command()

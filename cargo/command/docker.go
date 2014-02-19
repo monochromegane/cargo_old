@@ -9,6 +9,7 @@ type DockerRunCommand struct {
 	HostVolume      string
 	ContainerVolume string
 	Cmd             []string
+	WorkDir         string
 }
 
 func (self *DockerRunCommand) Command() *exec.Cmd {
@@ -18,6 +19,12 @@ func (self *DockerRunCommand) Command() *exec.Cmd {
 		cmd = append(cmd, []string{
 			"-v",
 			self.HostVolume + ":" + self.ContainerVolume}...,
+		)
+	}
+	if len(self.WorkDir) > 0 {
+		cmd = append(cmd, []string{
+			"-w",
+			self.WorkDir}...,
 		)
 	}
 	cmd = append(cmd, self.Image)
