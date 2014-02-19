@@ -21,7 +21,7 @@ func NewGoPackage(from string, option option.Option) *GoPackage {
 func (self *GoPackage) GroupBy() map[int][]string {
 	opt := self.Option
 
-	goList := command.GoListCommand{opt.GoPackage}
+	goList := command.GoListCommand{opt.Target}
 	command := command.DockerRunCommand{
 		Image:           opt.Image,
 		HostVolume:      self.From,

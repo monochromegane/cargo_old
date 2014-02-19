@@ -9,5 +9,5 @@ type GoListCommand struct {
 }
 
 func (self *GoListCommand) Command() *exec.Cmd {
-	return exec.Command("go", []string{"list", self.Package + "/..."}...)
+	return exec.Command("go", []string{"list", self.Package}...)
 }

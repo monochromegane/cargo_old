@@ -7,6 +7,6 @@ type Option struct {
 	GroupBy     string `short:"g" default:"file-size"`
 	Mount       string `short:"m"`
 	Command     string `short:"c"`
+	Target      string `short:"t"`
 	WorkDir     string `short:"w" default:"/tmp/cargo"`
-	GoPackage   string `long:"go-package"`
 }
