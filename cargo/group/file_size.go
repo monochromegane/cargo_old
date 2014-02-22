@@ -59,7 +59,7 @@ func (self *Groups) Convert() map[int][]string {
 func (self *FileSize) GroupBy() map[int][]string {
 
 	groups := NewGroups(self.Option.Concurrency)
-	filepath.Walk(self.From, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(filepath.Join(self.From, self.Option.Target), func(path string, info os.FileInfo, err error) error {
 		min := groups.Minimum()
 		min.TotalSize = min.TotalSize + int(info.Size())
 		min.Files = append(min.Files, path)
