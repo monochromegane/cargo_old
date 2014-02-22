@@ -62,7 +62,8 @@ func (self *FileSize) GroupBy() map[int][]string {
 	filepath.Walk(filepath.Join(self.From, self.Option.Target), func(path string, info os.FileInfo, err error) error {
 		min := groups.Minimum()
 		min.TotalSize = min.TotalSize + int(info.Size())
-		min.Files = append(min.Files, path)
+		rel, _ := filepath.Rel(self.From, path)
+		min.Files = append(min.Files, rel)
 		return nil
 
 	})
