@@ -34,6 +34,7 @@ func (self *Cargo) Run() {
 			WorkDir:         self.Option.Mount,
 			Cmd:             append(strings.Split(self.Option.Command, " "), group...),
 		}
+		self.printDebug(command.Command().Args)
 		return command.Command()
 	}, func(index int, group []string, result []byte, err error) bool {
 		if err != nil {
@@ -44,4 +45,10 @@ func (self *Cargo) Run() {
 		return true
 	})
 
+}
+
+func (self *Cargo) printDebug(log ...interface{}) {
+	if self.Option.Debug {
+		fmt.Printf("DEBUG: %s\n", log)
+	}
 }
