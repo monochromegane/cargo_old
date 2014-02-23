@@ -19,6 +19,19 @@ type Cargo struct {
 func (self *Cargo) Run() {
 
 	asset := asset.Asset{Option: self.Option}
+
+	if len(self.Option.BeforeAll) > 0 {
+		before := command.DockerRunCommand{
+			Image:           self.Option.Image,
+			HostVolume:      asset.CurrentDir(),
+			ContainerVolume: self.Option.Mount,
+			WorkDir:         self.Option.Mount,
+			Cmd:             strings.Split(self.Option.BeforeAll, " "),
+		}
+		self.printDebug(before.Command().Args)
+		before.Command().Run()
+	}
+
 	err := asset.Prepare()
 	if err != nil {
 		return
@@ -37,11 +50,12 @@ func (self *Cargo) Run() {
 		self.printDebug(command.Command().Args)
 		return command.Command()
 	}, func(index int, group []string, result []byte, err error) bool {
+		self.printDebug(err)
 		if err != nil {
 			return false
 		}
+		self.printDebug(result)
 		os.RemoveAll(asset.WorkDirWithIndex(index))
-		fmt.Printf("%s", result)
 		return true
 	})
 

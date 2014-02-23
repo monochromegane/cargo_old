@@ -11,6 +11,7 @@ type Option struct {
 	User        string `short:"u" default:"cargo"`
 	GroupBy     string `short:"g" default:"file-size"`
 	Mount       string `short:"m"`
+	BeforeAll   string `short:"b"`
 	Command     string `short:"c"`
 	Target      string `short:"t"`
 	Filter      string `short:"f" default:""`
