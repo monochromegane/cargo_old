@@ -59,8 +59,12 @@ func (self *Groups) Convert() map[int][]string {
 func (self *FileSize) GroupBy() map[int][]string {
 
 	groups := NewGroups(self.Option.Concurrency)
+	filter := self.Option.GetFilter()
 	filepath.Walk(filepath.Join(self.From, self.Option.Target), func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
+			return nil
+		}
+		if filter != nil && !filter.MatchString(info.Name()) {
 			return nil
 		}
 		min := groups.Minimum()
