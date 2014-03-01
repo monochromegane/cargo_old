@@ -19,7 +19,7 @@ func Run(group map[int][]string, run RunCommand, onResult OnResult) {
 	for index, args := range group {
 		command := run(index, args)
 		go func(index int, args []string, command *exec.Cmd, results chan Result) {
-			result, err := command.Output()
+			result, err := command.CombinedOutput()
 			results <- Result{index, args, result, err}
 		}(index, args, command, results)
 	}

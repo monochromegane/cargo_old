@@ -16,7 +16,7 @@ type Cargo struct {
 	Option option.Option
 }
 
-func (self *Cargo) Run() {
+func (self *Cargo) Run() bool {
 
 	asset := asset.Asset{Option: self.Option}
 
@@ -29,12 +29,17 @@ func (self *Cargo) Run() {
 			Cmd:             strings.Split(self.Option.BeforeAll, " "),
 		}
 		self.printDebug(before.Command().Args)
-		before.Command().Run()
+		resultBefore, err := before.Command().CombinedOutput()
+		if err != nil {
+			fmt.Printf("Failed to run before all.\n%s\n%s\n", resultBefore, err)
+			return false
+		}
 	}
 
 	err := asset.Prepare()
 	if err != nil {
-		return
+		fmt.Println("Failed to prepare assets.")
+		return false
 	}
 
 	groups := group.NewGrouper(asset.CurrentDir(), self.Option).GroupBy()
@@ -50,15 +55,14 @@ func (self *Cargo) Run() {
 		self.printDebug(command.Command().Args)
 		return command.Command()
 	}, func(index int, group []string, result []byte, err error) bool {
-		self.printDebug(err)
+		fmt.Printf("\n========== [concurrency %d] ==========\n%s\n", index, result)
 		if err != nil {
-			return false
+			fmt.Printf("Failed to run tests.\n%s\n", err)
 		}
-		self.printDebug(result)
 		os.RemoveAll(asset.WorkDirWithIndex(index))
 		return true
 	})
-
+	return true
 }
 
 func (self *Cargo) printDebug(log ...interface{}) {
